@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy 20/10 💌</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/MotionPathPlugin.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg1: url('background.jpg');
+  --bg2: url('eCAjF3Iw0JpNFufsBOZP9PKkMxpD3qXA6K-rPChWUngNNmlq-M1Sp-v_h1K4O3XehYDEfhKqwXbH-eYmvCpIv30VBlnSxQysSwY3yZHnYWo.jpg');
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg1) center/cover no-repeat;
+  font-family: 'Poppins', sans-serif;
+  transition: background 3s ease-in-out;
+}
+
+/* ===== 🎀 GIAO DIỆN ĐĂNG NHẬP ===== */
+#loginScreen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #ffe6eb, #ffd4e2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.login-box {
+  background: white;
+  padding: 40px 50px;
+  border-radius: 25px;
+  box-shadow: 0 10px 40px rgba(255,182,193,0.6);
+  text-align: center;
+  width: 350px;
+  animation: float 3s ease-in-out infinite alternate;
+}
+@keyframes float {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-10px); }
+}
+.login-box h2 {
+  color: #e75480;
+  margin-bottom: 25px;
+}
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 10px;
+  border: 2px solid #ffc0cb;
+  font-size: 16px;
+  outline: none;
+  transition: 0.3s;
+}
+.login-box input:focus {
+  border-color: #ff69b4;
+  box-shadow: 0 0 8px #ffb6c1;
+}
+.login-box button {
+  margin-top: 10px;
+  padding: 10px 40px;
+  font-size: 16px;
+  border-radius: 20px;
+  border: none;
+  background: linear-gradient(45deg, #ff94c2, #ffb6c1);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.login-box button:hover {
+  transform: scale(1.05);
+}
+#errorMsg {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+  display: none;
+}
+/* 🆕 Checkbox hiển thị mật khẩu */
+.show-pass {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  margin-top: 5px;
+  color: #333;
+}
+
+/* ===== 🌸 GIAO DIỆN CHÍNH ===== */
+.scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* ✈️ Máy bay */
+#plane {
+  position: absolute;
+  width: 130px;
+  z-index: 5;
+  filter: drop-shadow(0 0 15px rgba(255, 192, 203, 0.8));
+}
+
+/* 💨 Vệt khói & trái tim */
+.smoke, .heart {
+  position: absolute;
+  pointer-events: none;
+}
+.smoke {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 160, 203, 0.7);
+  filter: blur(3px);
+}
+.heart {
+  font-size: 18px;
+  color: #ff9bcf;
+  opacity: 0.8;
+}
+
+/* 🪞 Gương */
+#mirror {
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 250px); /* Dịch nhẹ qua trái */
+  width: 450px;
+  height: 500px;
+  transform: translateY(-50%) scale(0.9);
+  border-radius: 25px;
+  overflow: hidden;
+  border: 4px solid rgba(255, 182, 193, 0.9);
+  box-shadow: 0 0 60px rgba(255, 192, 203, 0.7);
+  opacity: 0;
+  z-index: 5;
+}
+#mirror video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+/* 🔔 Chuông (góc trái) */
+#bell {
+  position: absolute;
+  width: 65px;
+  cursor: pointer;
+  opacity: 0;
+  z-index: 10;
+  bottom: 15px;
+  left: 15px;
+  animation: glow 2s infinite alternate;
+}
+@keyframes glow {
+  from { filter: drop-shadow(0 0 5px pink); }
+  to { filter: drop-shadow(0 0 25px #ffb6c1); }
+}
+
+#notification {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
+  font-size: 14px;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+/* 💬 Thông báo */
+#msg {
+  position: absolute;
+  bottom: 30px;
+  left: calc(50% - 500px);
+  width: 250px;
+  text-align: right;
+  color: black;
+  font-weight: 600;
+  font-size: 16px;
+  text-shadow: 0 0 5px rgba(255,255,255,0.7);
+  opacity: 0;
+}
+
+/* 💌 Thư */
+#letter {
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 0px); /* Đối xứng qua phải */
+  width: 450px;
+  height: 600px;
+  border-radius: 25px;
+  box-shadow: 0 10px 50px rgba(255,182,193,0.6);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-50%);
+}
+#letter img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 25px;
+}
+
+/* 🌟 Hiệu ứng nền */
+.spark, .butterfly, .lightwave { position: absolute; }
+.butterfly { width: 45px; opacity: 0; z-index: 20; filter: drop-shadow(0 0 10px pink); }
+.lightwave {
+  width: 200%; height: 200%; top: -50%; left: -50%;
+  background: radial-gradient(circle, rgba(255,182,193,0.2) 0%, transparent 70%);
+  animation: wave 6s infinite alternate; pointer-events: none; z-index: 1;
+}
+@keyframes wave { from { transform: scale(1); opacity: 0.4; } to { transform: scale(1.3); opacity: 0.7; } }
+/* 🆕 Hiển thị tên tài khoản */
+#userNameDisplay {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-weight: 600;
+  font-size: 20px;
+  color: black;
+  background: rgba(255,255,255,0.6);
+  padding: 6px 12px;
+  border-radius: 15px;
+  box-shadow: 0 0 8px rgba(255,182,193,0.6);
+}
+/* 🆕 Thêm vùng chứa ảnh đại diện */
+#galleryContainer {
+  position: absolute;
+  top: 100px;
+  right: 45px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 50;
+}
+#galleryContainer img {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(255, 182, 193, 0.7);
+  border: 2px solid white;
+  object-fit: cover;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+#galleryContainer img:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 20px rgba(255, 105, 180, 0.9);
+}
+</style>
+</head>
+
+<body>
+<!-- 🌸 GIAO DIỆN ĐĂNG NHẬP -->
+<div id="loginScreen">
+  <div class="login-box">
+    <h2>💌 Đăng nhập đi nè </h2>
+    <input type="text" id="username" placeholder="Tên đăng nhập">
+    <input type="password" id="password" placeholder="Mật khẩu">
+     <!-- 🆕 Checkbox hiện mật khẩu -->
+    <label class="show-pass">
+      <input type="checkbox" id="showPassword" onclick="togglePassword()"> Hiện mật khẩu
+    </label>
+    <button onclick="login()">Đăng nhập</button>
+    <div id="errorMsg">Sai tài khoản hoặc mật khẩu!</div>
+  </div>
+</div>
+
+<!-- 🌷 GIAO DIỆN CHÍNH -->
+<div class="scene" style="display:none;">
+  <div class="lightwave"></div>
+  <img id="plane" src="paper-airplane-clipart-lg.png" alt="plane" />
+  <div id="mirror">
+    <video id="camera" autoplay></video>
+    <div id="bell">
+      <img src="Cai_chuong.png" alt="bell" style="width:100%">
+      <div id="notification">1</div>
+    </div>
+  </div>
+  <div id="msg">💬 Hãy bấm vào chuông xem thử, có ai muốn gửi gì đó cho bạn...</div>
+  <div id="letter"><img id="letterImage" src="background-2010 (24).jpg" alt="letter"></div>
+  <!-- 🆕 Hiển thị tên người dùng -->
+  <div id="userNameDisplay"></div>
+  <!-- 🆕 Nút đăng xuất -->
+  <img id="logoutIcon" src="Dangxuat.png" alt="Đăng xuất" 
+    style="position:absolute; top:20px; right:1250px; width:35px; cursor:pointer; opacity:0.9;
+          filter: drop-shadow(0 0 6px pink); transition:0.3s;">
+<!-- 🆕 Vùng hiển thị 3 ảnh riêng cho từng người -->
+  <div id="galleryContainer"></div>
+</div>
+</div>
+
+<script>
+/* ===== 🎀 TÀI KHOẢN & ẢNH RIÊNG ===== */
+const accounts = {
+  "DKT": { pass: "kimthanh2005", letter: "Thanh.PNG",name: "Đặng Kim Thanh", gallery: ["Thanh1.PNG", "Thanh2.PNG", "Thanh3.PNG"] },
+  "HTMQ": { pass: "quyen05", letter: "Quyen.PNG", name: "Huỳnh Thị Minh Quyên", gallery: ["Quyen1.PNG", "Quyen2.PNG", "Quyen3.PNG"]  },
+  "NLGH": { pass: "nguyenlegiahan", letter: "Han.PNG", name: "Nguyễn Lê Gia Hân", gallery: ["Han1.PNG", "Han3.PNG", "Han4.jpg"]},
+  "VTNY": { pass: "VTNY2005", letter: "Y.PNG", name: "Võ Thị Như Ý", gallery: ["Y1.PNG", "Y2.PNG", "Y3.PNG"]},
+  "DNMN": { pass: "MN310", letter: "Ngoc.PNG", name: "Đặng Nguyễn Mai Ngọc", gallery: ["Ngoc1.jpg", "Ngoc2.PNG", "Ngoc3.PNG"]},
+  "LNTA": { pass: "lengocthienan2005", letter: "An.PNG", name: "Lê Ngọc Thiên Ân",gallery: ["An1.jpg", "An2.PNG", "An3.PNG"] },
+  "CTTT": { pass: "thutrang730", letter: "Trang.PNG", name: "Cao Thị Thu Trang",gallery: ["Trang1.jpg", "Trang2.jpg", "Trang3.PNG"]  }
+};
+/* ===== 🆕 Hiện mật khẩu ===== */
+function togglePassword() {
+  const passField = document.getElementById("password");
+  passField.type = passField.type === "password" ? "text" : "password";
+}
+
+/* ===== 🔐 ĐĂNG NHẬP ===== */
+function login() {
+  const user = document.getElementById('username').value.trim();
+  const pass = document.getElementById('password').value.trim();
+  const errorMsg = document.getElementById('errorMsg');
+
+  if (accounts[user] && accounts[user].pass === pass) {
+    // đặt ảnh riêng cho người đó
+    document.getElementById("letterImage").src = accounts[user].letter;
+
+    gsap.to("#loginScreen", { opacity: 0, duration: 1, onComplete: () => {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.querySelector('.scene').style.display = 'block';
+      // 🆕 Cập nhật và hiển thị tên người dùng ở đây (sau khi scene hiện)
+      const nameDisplay = document.getElementById("userNameDisplay");
+      nameDisplay.textContent = accounts[user].name;
+      // đổi ảnh gallery
+      const galleryContainer = document.getElementById("galleryContainer");
+      galleryContainer.innerHTML = "";
+      accounts[user].gallery.forEach(link => {
+        const img = document.createElement("img");
+        img.src = link; // bạn tự dán link ảnh tại đây
+        galleryContainer.appendChild(img);
+    });
+      gsap.fromTo(nameDisplay, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 1 });
+
+        // Bắt đầu hoạt cảnh chính
+      startMainScene();
+    }});
+  } else {
+    errorMsg.style.display = 'block';
+    gsap.fromTo(errorMsg, { scale: 1.2 }, { scale: 1, duration: 0.3 });
+  }
+}
+/* ===== 🚪 ĐĂNG XUẤT ===== */
+function logout() {
+  // Ẩn giao diện chính, hiện lại đăng nhập
+  gsap.to(".scene", {
+    opacity: 0,
+    duration: 1,
+    onComplete: () => {
+      document.querySelector('.scene').style.display = 'none';
+      const loginScreen = document.getElementById('loginScreen');
+      loginScreen.style.display = 'flex';
+      gsap.fromTo(loginScreen, { opacity: 0 }, { opacity: 1, duration: 1 });
+
+      // Reset input
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('errorMsg').style.display = 'none';
+      currentUser = null;
+
+      // Ẩn tên người dùng & logout icon
+      document.getElementById('userNameDisplay').textContent = '';
+      document.getElementById('logoutIcon').style.opacity = 0;
+    }
+  });
+}
+
+/* ===== ⌨️ CHO PHÉP NHẤN ENTER ===== */
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') {
+    const loginScreen = document.getElementById('loginScreen');
+    if (loginScreen.style.display !== 'none') {
+      login();
+    }
+  }
+});
+
+/* ===== ✈️ GIAO DIỆN CHÍNH ===== */
+function startMainScene() {
+  gsap.registerPlugin(MotionPathPlugin);
+  const plane = document.getElementById("plane");
+  const scene = document.querySelector(".scene");
+
+  gsap.to(plane, {
+    duration: 10,
+    ease: "power2.inOut",
+    motionPath: {
+      path: [
+        { x: -300, y: 500 },
+        { x: window.innerWidth / 4, y: 100 },
+        { x: (window.innerWidth / 3) * 2, y: 380 },
+        { x: window.innerWidth / 2 - 60, y: window.innerHeight / 2 - 100 }
+      ],
+      curviness: 2
+    },
+    onUpdate: createTrail,
+    onComplete: () => {
+      gsap.to(plane, { opacity: 0, duration: 1 });
+      setTimeout(showMirror, 1000);
+    }
+  });
+
+  function createTrail() {
+    if (Math.random() > 0.6) {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = "💖";
+      scene.appendChild(heart);
+      const rect = plane.getBoundingClientRect();
+      gsap.set(heart, { left: rect.left + 60, top: rect.top + 40 });
+      gsap.to(heart, { y: "+=50", opacity: 0, duration: 2, ease: "power1.out", onComplete: () => heart.remove() });
+    } else {
+      const smoke = document.createElement("div");
+      smoke.className = "smoke";
+      scene.appendChild(smoke);
+      const rect = plane.getBoundingClientRect();
+      gsap.set(smoke, { left: rect.left + 60, top: rect.top + 40 });
+      gsap.to(smoke, { duration: 1.5, scale: Math.random() * 2, opacity: 0, y: "+=30", onComplete: () => smoke.remove() });
+    }
+  }
+
+  const video = document.getElementById("camera");
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+    .then(stream => video.srcObject = stream)
+    .catch(console.error);
+
+  function showMirror() {
+    gsap.to("#mirror", { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" });
+    setTimeout(() => showBell(), 1500);
+  }
+
+  function showBell() {
+    gsap.to("#bell", { opacity: 1, duration: 1, ease: "back.out(2)" });
+    ringBell();
+    gsap.to("#msg", { opacity: 1, delay: 0.8, duration: 1 });
+  }
+
+  function ringBell() {
+    gsap.to("#bell", { rotation: 15, yoyo: true, repeat: -1, duration: 0.3, ease: "easeInOut" });
+  }
+
+  document.getElementById("bell").addEventListener("click", () => {
+    gsap.to("#mirror", { x: "-300px", duration: 1.5, ease: "power2.inOut" });
+    gsap.to("#letter", { opacity: 1, duration: 2, delay: 0.8 });
+    gsap.to("#msg", { opacity: 0, duration: 0.5 });
+    document.querySelector("#notification").style.display = "none";
+    document.body.style.backgroundImage = "var(--bg2)";
+    createSparks();
+    createButterflies();
+    createHearts();
+  });
+
+  function createSparks() {
+    for (let i = 0; i < 100; i++) {
+      const s = document.createElement("div");
+      s.className = "spark";
+      scene.appendChild(s);
+      gsap.set(s, { x: window.innerWidth / 2, y: window.innerHeight / 2, opacity: 1 });
+      gsap.to(s, {
+        duration: Math.random() * 2 + 1,
+        x: "+=" + (Math.random() * 600 - 300),
+        y: "+=" + (Math.random() * 400 - 200),
+        opacity: 0,
+        scale: Math.random() * 2 + 0.5,
+        ease: "power2.out",
+        onComplete: () => s.remove()
+      });
+    }
+  }
+
+  function createButterflies() {
+    for (let i = 0; i < 8; i++) {
+      const b = document.createElement("img");
+      b.src = "Buom.png";
+      b.className = "butterfly";
+      scene.appendChild(b);
+      gsap.set(b, { x: window.innerWidth / 2, y: window.innerHeight / 2, opacity: 1 });
+      gsap.to(b, {
+        duration: 7 + Math.random() * 3,
+        x: "+=" + (Math.random() * 800 - 400),
+        y: "-=" + (Math.random() * 600 - 300),
+        opacity: 0,
+        rotation: Math.random() * 360,
+        ease: "sine.inOut",
+        onComplete: () => b.remove()
+      });
+    }
+  }
+
+  function createHearts() {
+    for (let i = 0; i < 15; i++) {
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.textContent = "💘";
+      scene.appendChild(h);
+      gsap.set(h, { x: window.innerWidth / 2, y: window.innerHeight / 2, opacity: 1 });
+      gsap.to(h, {
+        duration: 4 + Math.random() * 2,
+        x: "+=" + (Math.random() * 400 - 200),
+        y: "-=" + (Math.random() * 400 - 200),
+        opacity: 0,
+        scale: Math.random() * 1.5 + 0.5,
+        ease: "power1.out",
+        onComplete: () => h.remove()
+      });
+    }
+  }
+}
+/* ===== 🔗 GẮN SỰ KIỆN LOGOUT ===== */
+document.getElementById('logoutIcon').addEventListener('click', logout);
+</script>
+</body>
+</html>
